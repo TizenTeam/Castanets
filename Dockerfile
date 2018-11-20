@@ -46,13 +46,24 @@ RUN echo "#log: ${project}: Preparing sources" \
 WORKDIR /usr/local/opt/${project}/src/${project}
 RUN echo "#log: ${project}: Preparing sources" \
   && set -x \
+  && mkdir -p src && cd src \
   && git clone -b castanets_63 https://github.com/Samsung/castanets \
   && sync
 
-WORKDIR /usr/local/opt/${project}/src/${project}/depot_tools
 RUN echo "#log: ${project}: Preparing sources" \
   && set -x \
   && export PATH="${PATH}:${PWD}/depot_tools" \
   && ls \
-  && ./build/install-build-deps.sh \
+  && build/install-build-deps.sh \
+  && sync
+
+RUN echo "#log: ${project}: Preparing sources" \
+  && set -x \
+  && build/create_gclient.sh \
+  && sync
+
+
+RUN echo "#log: ${project}: Preparing sources" \
+  && set -x \
+  && gclient sync --with_branch_head \
   && sync
