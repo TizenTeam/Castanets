@@ -61,7 +61,7 @@ RUN echo "#log: ${project}: Preparing sources" \
 
 RUN echo "#log: ${project}: Preparing sources" \
   && set -x \
-  && build/create_gclient.sh \
+  && yes | build/create_gclient.sh \
   && sync
 
 RUN echo "#log: ${project}: Preparing sources" \
