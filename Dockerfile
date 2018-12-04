@@ -27,6 +27,7 @@ RUN echo "# log: Setup system" \
      lsb-release \
      sudo \
      ttf-mscorefonts-installer \
+     checkinstall \
   && apt-get clean \
   && sync
 
@@ -61,7 +62,7 @@ RUN echo "# log: ${project}: Preparing sources" \
   && sync
 
 WORKDIR /usr/local/opt/${project}/src/${project}/src
-RUN echo "# log: ${project}: Preparing sources" \
+RUN echo "# log: ${project}: Building sources" \
   && set -x \
   && export PATH="${PATH}:/usr/local/opt/depot_tools" \
   && gn gen out/Default \
@@ -71,4 +72,10 @@ RUN echo "# log: ${project}: Preparing sources" \
   && cat out/Default/args.gn \
   && ninja -C out/Default chrome \
   && ./out/Default/chrome -version \
+  && sync
+
+WORKDIR /usr/local/opt/${project}/src/${project}/src
+RUN echo "# log: ${project}: Installing" \
+  && set -x \
+  && make checkinstall/debian \
   && sync
