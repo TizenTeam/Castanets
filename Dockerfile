@@ -40,6 +40,8 @@ RUN echo "# log: ${project}: Preparing sources" \
 
 ENV project castanets
 
+ADD . /usr/local/opt/${project}/src/${project}/src
+
 WORKDIR /usr/local/opt/${project}/src/${project}/src
 RUN echo "# log: ${project}: Preparing sources" \
   && set -x \
