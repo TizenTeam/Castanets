@@ -38,6 +38,7 @@ RUN echo "# log: ${project}: Preparing sources" \
   && sync
 
 ENV project castanets
+
 ADD . /usr/local/opt/${project}/src/${project}/src
 
 WORKDIR /usr/local/opt/${project}/src/${project}/src
