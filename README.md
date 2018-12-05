@@ -147,3 +147,63 @@ Device B: Renderer Process
 ```sh
 $ out/Default/chrome --type=renderer --server-address=<IP ADDR>
 ```
+
+### Run castanets in a container using docker
+
+
+Usage to run 2 chrome instances in same container:
+
+```sh
+# First let's set some variables that will be referered later
+
+url='https://github.com/Samsung/castanets'
+project="castanets"
+image="${project}"
+name="${project}"
+net_name="${project}_net"
+hostname="${project}_server"
+dir="/usr/local/opt/${project}/src/${project}/src"
+exe="$dir/out/Default/chrome"
+
+# Build image from sources:
+docker build -t "${name}" .
+
+# Run server
+docker network create "${net_name}"
+
+docker run \
+  --network "${net_name}" \
+  --network-alias "${hostname}"  \
+  -ti --rm  \
+  "${name}" \
+  ip addr show
+
+# Host guess X11 app (Unsecure)
+xhost +
+
+# Run browser (but not rendering)
+docker run \
+  -e DISPLAY="$DISPLAY"  \
+  -v /tmp/.X11-unix:/tmp/.X11-unix  \
+  --network ${net_name} \
+  --network-alias ${hostname}  \
+  -ti --rm \
+  ${name} \
+  ${exe} --no-sandbox ${url}
+
+# It should not crash then you can type Ctrl+z and type "bg &"
+# Now the rendering process can be started:
+
+docker run \
+  --network "${net_name}" \
+  -e DISPLAY="$DISPLAY"  \
+  -v /tmp/.X11-unix:/tmp/.X11-unix  \
+  -ti \
+  "$name" \
+  "$exe" \
+  --no-sandbox \
+  --type=renderer \
+  --server-address="$host"
+
+# Page should display fine in browser
+```
