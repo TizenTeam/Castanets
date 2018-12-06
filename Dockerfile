@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright: 2018-present Samsung Electronics France SAS, and other contributors
 
-FROM ubuntu:16.04
+FROM i386/ubuntu:16.04
 MAINTAINER Philippe Coval (p.coval@samsung.com)
 
 ENV DEBIAN_FRONTEND noninteractive
