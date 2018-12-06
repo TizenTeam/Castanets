@@ -28,8 +28,18 @@ RUN echo "# log: Setup system" \
      sudo \
      ttf-mscorefonts-installer \
      checkinstall \
+     appmenu-gtk2-module \
+     ffmpeg \
+     manpages-fr-extra \
   && apt-get clean \
   && sync
+
+#E: Package 'appmenu-gtk' has no installation candidate
+#E: Package 'libapache2-mod-php5' has no installation candidate
+#E: Package 'libav-tools' has no installation candidate
+#E: Package 'php5-cgi' has no installation candidate
+#E: Package 'realpath' has no installation candidate
+
 
 WORKDIR /usr/local/opt/depot_tools
 RUN echo "# log: ${project}: Preparing sources" \
