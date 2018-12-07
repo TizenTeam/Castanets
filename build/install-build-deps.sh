@@ -161,7 +161,6 @@ dev_list="\
   gperf
   libasound2-dev
   libbrlapi-dev
-  libav-tools
   libbz2-dev
   libcairo2-dev
   libcap-dev
@@ -482,9 +481,9 @@ else
   dev_list="${dev_list} ttf-indic-fonts"
 fi
 if package_exists php7.0-cgi; then
-  dev_list="${dev_list} php7.0-cgi libapache2-mod-php7.0"
+echo  dev_list="${dev_list} php7.0-cgi libapache2-mod-php7.0"
 else
-  dev_list="${dev_list} php5-cgi libapache2-mod-php5"
+echo  dev_list="${dev_list} php5-cgi libapache2-mod-php5"
 fi
 # ttf-mscorefonts-installer is in the Debian contrib repo, which has
 # dependencies on non-free software.  Install it only if the user has already
@@ -498,7 +497,7 @@ fi
 # Some packages are only needed if the distribution actually supports
 # installing them.
 if package_exists appmenu-gtk; then
-  lib_list="$lib_list appmenu-gtk"
+echo  lib_list="$lib_list appmenu-gtk"
 fi
 
 # When cross building for arm/Android on 64-bit systems the host binaries
