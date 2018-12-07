@@ -82,10 +82,11 @@ ${HOME}/.gclient: tmp/depot_tools/gclient
 	build/create_gclient.sh
 
 rule/setup/debian: tmp/depot_tools/gclient
-	#build/install-build-deps.sh
+	yes | build/install-build-deps.sh
 	sync
 	which gclient
 	gclient sync --with_branch_head
+	gclient config
 
 tmp/depot_tools: 
 	@mkdir -p ${@D}
