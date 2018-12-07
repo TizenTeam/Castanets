@@ -5,9 +5,10 @@
 default: help
 
 project=castanets
-dir=${CURDIR}/out/Default/
-exe=${dir}chrome
 url?=https://github.com/Samsung/castanets
+dir=${CURDIR}/out/Default
+exe_basename=chrome
+exe=${dir}/${exe_basename}
 debian_requires?= \
  libasound2, \
  libgconf-2-4, \
@@ -39,9 +40,16 @@ install: ${exe}
 	install ${<D}/*.pak ${DESTDIR}/usr/lib/${project}
 	cp -rfa ${<D}/locales ${DESTDIR}/usr/lib/${project}
 
-${exe}:
-	@mkdir -p ${@D}
-	touch ${exe}
+${dir}:
+	gn gen out/Default
+
+${dir}/args.gn: ${dir}
+	echo 'enable_castanets=true' | tee $@
+	echo 'enable_nacl=false' | tee -a $@
+	gn args --list ${@D}
+
+${exe}: ${dir}/args.gn
+	ninja -C ${@D} ${@F}
 
 checkinstall/debian: ${exe}
 	@echo "${pkgsummary}" > description-pak
@@ -61,3 +69,20 @@ checkinstall/debian: ${exe}
  --requires="${debian_requires}" \
  --type ${@F} \
  #EOL
+
+#{ TODO: extra
+PATH:=${PATH}:${CURDIR}/tmp/depot_tools
+export PATH
+
+rule/setup/debian: tmp/depot_tools
+	sync
+
+
+tmp/depot_tools:
+	mkdir -p ${@D}
+	git clone --recursive --depth 1 \
+https://chromium.googlesource.com/chromium/tools/depot_tools ${@}
+	build/create_gclient.sh
+	gclient sync --with_branch_head
+
+#} TODO: extra
