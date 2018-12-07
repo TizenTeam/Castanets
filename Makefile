@@ -22,6 +22,8 @@ pkglicense?=BSD-3-clause and others
 pkgversion?=$(shell git describe --tag | tr '-' '+' || echo 0.0.0)
 pkgrelease?=0~${USER}0
 pkgsummary?=Web engine distributed among multiple devices
+src_dir=${CURDIR}/tmp/src
+
 
 help:
 	echo "TODO"
@@ -75,18 +77,22 @@ deploy_tools_url?=https://chromium.googlesource.com/chromium/tools/depot_tools.g
 PATH:=${PATH}:${CURDIR}/tmp/depot_tools
 export PATH
 
-tmp/depot_tools/gclient:
-	build/create_gclient.sh
+tmp/depot_tools/gclient: build/create_gclient.sh
+	ls $@
 
 ${HOME}/.gclient: tmp/depot_tools/gclient
 	build/create_gclient.sh
 
-rule/setup/debian: tmp/depot_tools/gclient
-	yes | build/install-build-deps.sh
+${src_dir}: ${CURDIR}
+	mkdir -p ${@D}
+	ln -fs $< $@
+
+rule/setup/debian: ${src_dir} tmp/depot_tools/gclient 
+#	yes | build/install-build-deps.sh
 	sync
 	which gclient
-	gclient sync --with_branch_head
-	gclient config
+	cd $< && gclient sync --with_branch_head
+#	gclient config
 
 tmp/depot_tools: 
 	@mkdir -p ${@D}
@@ -94,5 +100,7 @@ tmp/depot_tools:
 
 tmp/depot_tools/gclient: tmp/depot_tools
 
+build: ${exe}
+	ls $<
 
 #} TODO: extra
