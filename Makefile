@@ -71,17 +71,17 @@ checkinstall/debian: ${exe}
  #EOL
 
 #{ TODO: extra
+deploy_tools_url?=https://chromium.googlesource.com/chromium/tools/depot_tools.git
 PATH:=${PATH}:${CURDIR}/tmp/depot_tools
 export PATH
 
 rule/setup/debian: tmp/depot_tools
 	sync
 
-
 tmp/depot_tools:
-	mkdir -p ${@D}
-	git clone --recursive --depth 1 \
-https://chromium.googlesource.com/chromium/tools/depot_tools ${@}
+	@mkdir -p ${@D}
+	build/install-build-deps.sh
+	git clone --recursive --depth 1 ${deploy_tools_url} ${@}
 	build/create_gclient.sh
 	gclient sync --with_branch_head
 
