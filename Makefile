@@ -87,8 +87,15 @@ ${src_dir}: ${CURDIR}
 	mkdir -p ${@D}
 	ln -fs $< $@
 
-rule/setup/debian: ${src_dir} tmp/depot_tools/gclient 
-#	yes | build/install-build-deps.sh
+tmp/install-build-deps.sh.done: build/install-build-deps.sh
+	mkdir -p ${@D}
+	yes | $<
+	touch $@
+
+${srcdir}/../.gclient: 	build/create_gclient.sh
+	$<
+
+rule/setup/debian: ${src_dir} tmp/depot_tools/gclient tmp/install-build-deps.sh.done
 	sync
 	which gclient
 	cd $< && gclient sync --with_branch_head
@@ -100,7 +107,11 @@ tmp/depot_tools:
 
 tmp/depot_tools/gclient: tmp/depot_tools
 
-build: ${exe}
+rule/build: 
+#	which gclient ||
+	make rule/setup/debian
+	make ${exe}
 	ls $<
+
 
 #} TODO: extra
