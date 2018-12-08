@@ -109,7 +109,7 @@ tmp/depot_tools/gclient: tmp/depot_tools
 
 rule/build: 
 #	which gclient ||
-	make rule/setup/debian
+#	make rule/setup/debian
 	make ${exe}
 	ls $<
 
