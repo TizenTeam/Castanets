@@ -20,6 +20,7 @@ RUN echo "# log: Configuring locales" \
 
 RUN echo "# log: Setup system" \
   && set -x \
+  && dpkg --get-selections > ~/packages-pre.lst \
   && apt-get update -y \
   && apt-get install -y \
      apt-transport-https \
@@ -39,7 +40,7 @@ RUN echo "# log: Setup system" \
 #E: Package 'libav-tools' has no installation candidate
 #E: Package 'php5-cgi' has no installation candidate
 #E: Package 'realpath' has no installation candidate
-
+# dpkg --get-selections >/backup/package-selections
 
 WORKDIR /usr/local/opt/depot_tools
 RUN echo "# log: ${project}: Preparing sources" \
@@ -90,4 +91,12 @@ WORKDIR /usr/local/opt/${project}/src/${project}/src
 RUN echo "# log: ${project}: Installing" \
   && set -x \
   && make checkinstall/debian \
+  && dpkg --get-selections > ~/packages-post.lst \
+  && diff -u ~/packages-pre.lst ~/packages-post.lst | tee packages.diff \
+  && cat ~/packages-pre.lst ~/packages-post.lst  | sort -n | uniq -u | cut -d1 | while read package ; do apt-get remove $package -y ; done \
+  && dpkg -i *.deb || sudo apt-get install -f \
+  && dpkg -i *.deb \
+  && install *.deb /usr/local/opt/${project} \
+  && rm -rf  /usr/local/opt/${project}/src \
+  && apt-get clean \
   && sync
