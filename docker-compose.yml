@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+# Copyright: 2018-present Samsung Electronics Co., Ltd. and other contributors
+
+version: "2"
+
+networks:
+  castanets_net:
+  
+services:
+  default:
+    build: .
+    command: --version
+
+  browser:
+    build: .
+    command: --no-sandbox https://github.com/samsung/castanets
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=${DISPLAY}
+    networks:
+      castanets_net:
+        aliases:
+         - castanets_host
+
+  renderer:
+    build: .
+    command: --no-sandbox --type=renderer --server-address=castanets_host
+    networks:
+      - castanets_net
