@@ -8,11 +8,11 @@ networks:
   
 services:
   default:
-    build: .
+    image: rzrfreefr/castanets:latest
     command: --version
 
   browser:
-    build: .
+    image: rzrfreefr/castanets:latest
     command: --no-sandbox https://github.com/samsung/castanets
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
@@ -24,13 +24,13 @@ services:
          - castanets-host.castanets-net
 
   renderer:
-    build: .
+    image: rzrfreefr/castanets:latest
     command: --no-sandbox --type=renderer --server-address=castanets_host
     networks:
       - castanets-net
 
   nfsbrowser:
-    build: .
+    image: rzrfreefr/castanets:latest
     command: --no-sandbox https://github.com/samsung/castanets --shared-memory-nfs-path=/tmp/castanets.tmp
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
@@ -42,7 +42,7 @@ services:
          - castanets-host.castanets-net
 
   nfsrenderer:
-    build: .
+    image: rzrfreefr/castanets:latest
     command: --no-sandbox --type=renderer --server-address=castanets-host --shared-memory-nfs-path=/tmp/castanets.tmp  
     networks:
       - castanets-net
