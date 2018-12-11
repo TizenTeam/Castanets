@@ -69,6 +69,7 @@ RUN echo "# log: ${project}: Building sources" \
   && gn gen out/Default \
   && echo 'enable_castanets=true' | tee out/Default/args.gn \
   && echo 'enable_nacl=false' | tee -a out/Default/args.gn \
+  && echo 'enable_network_shared_memory=true' | tee -a out/Default/args.gn \
   && gn args --list out/Default \
   && cat out/Default/args.gn \
   && ninja -C out/Default chrome \
