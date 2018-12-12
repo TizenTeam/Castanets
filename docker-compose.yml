@@ -31,7 +31,7 @@ services:
 
   nfsbrowser:
     image: rzrfreefr/castanets:latest
-    command: --no-sandbox https://github.com/samsung/castanets --shared-memory-nfs-path=/tmp/castanets.tmp
+    command: --no-sandbox https://github.com/samsung/castanets --shared-memory-nfs-path=/srv/nfs/castanets/shm.tmp
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
@@ -43,6 +43,6 @@ services:
 
   nfsrenderer:
     image: rzrfreefr/castanets:latest
-    command: --no-sandbox --type=renderer --server-address=castanets-host --shared-memory-nfs-path=/tmp/castanets.tmp  
+    command: --no-sandbox --type=renderer --server-address=castanets-host --shared-memory-nfs-path=/srv/nfs/castanets/shm.tmp
     networks:
       - castanets-net
