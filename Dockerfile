@@ -1,4 +1,5 @@
 #!/bin/echo docker build . -f
+# -*- docker-image-name: "castanets" -*-
 # -*- coding: utf-8 -*-
 # Copyright: 2018-present Samsung Electronics France SAS, and other contributors
 
