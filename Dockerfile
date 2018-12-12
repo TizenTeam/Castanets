@@ -111,10 +111,10 @@ RUN echo "# log: ${project}: Installing" \
 RUN echo "# log: Setup NFS" \
   && set -x \
   && apt-get update -y \
+  && mkdir -p /tmp/srv/nfs/${project} \
+  && echo '/tmp/srv/nfs/${project} *.castanetsnet(rw,sync,no_root_squash,no_subtree_check)' > /etc/exports \
   && apt-get install -y \
      nfs-kernel-server \
-     echo '/tmp/srv/nfs *.castanetsnet(rw,sync,no_root_squash,no_subtree_check)
-
   && apt-get clean \
   && sync
 
