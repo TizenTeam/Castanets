@@ -108,5 +108,15 @@ RUN echo "# log: ${project}: Installing" \
   && cd ../.. && rm -rf ./${project} \
   && sync
 
+RUN echo "# log: Setup NFS" \
+  && set -x \
+  && apt-get update -y \
+  && apt-get install -y \
+     nfs-kernel-server \
+     echo '/tmp/srv/nfs *.castanetsnet(rw,sync,no_root_squash,no_subtree_check)
+
+  && apt-get clean \
+  && sync
+
 ENTRYPOINT [ "/usr/lib/castanets/chrome" ]
 CMD [ "--version" ]
