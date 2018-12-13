@@ -2,11 +2,11 @@
 # -*- makefile -*-
 # ex: set tabstop=4 noexpandtab:
 
-default: help
+default: help all
 
 project=castanets
 url?=https://github.com/Samsung/castanets
-dir=${CURDIR}/out/Default
+dir=out/Default
 exe_basename=chrome
 exe=${dir}/${exe_basename}
 maintainer?=p.coval@samsung.com
@@ -24,11 +24,25 @@ debian_requires?= \
 #EOL
 
 
-help:
-	echo "TODO"
+help: README.md
+	@echo "# log: Check $< for more details"
 
 %: help
 	sync
+
+all: ${exe}
+	ls $<
+
+${dir}/build.ninja:
+	gn gen ${@D}
+
+${dir}/args.gn: ${dir}/build.ninja
+	echo 'enable_castanets=true' | tee $@
+	echo 'enable_nacl=false' | tee -a $@
+	gn args --list ${@D}
+
+${exe}: ${dir}/args.gn
+	ninja -C ${@D} ${@F}
 
 install: ${exe}
 	install -d ${DESTDIR}/usr/lib/${project}
