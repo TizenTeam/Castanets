@@ -67,18 +67,14 @@ WORKDIR /usr/local/opt/${project}/src/${project}/src
 RUN echo "# log: ${project}: Building sources" \
   && set -x \
   && export PATH="${PATH}:/usr/local/opt/depot_tools" \
-  && gn gen out/Default \
-  && echo 'enable_castanets=true' | tee out/Default/args.gn \
-  && echo 'enable_nacl=false' | tee -a out/Default/args.gn \
-  && gn args --list out/Default \
-  && cat out/Default/args.gn \
-  && ninja -C out/Default chrome \
+  && make all \
   && ./out/Default/chrome -version \
   && sync
 
 WORKDIR /usr/local/opt/${project}/src/${project}/src
 RUN echo "# log: ${project}: Installing" \
   && set -x \
+  && export PATH="${PATH}:/usr/local/opt/depot_tools" \
   && make checkinstall/debian \
   && install -d /usr/local/opt/${project}/dist \
   && install *.deb /usr/local/opt/${project}/dist \
