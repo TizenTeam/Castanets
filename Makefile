@@ -23,18 +23,21 @@ debian_requires?= \
  libgl1 \
 #EOL
 
+%:
+	@echo "make help" 
+	sync
 
 help: README.md
 	@echo "# log: Check $< for more details"
 
-%: help
-	sync
-
 all: ${exe}
 	ls $<
 
-${dir}/build.ninja:
-	gn gen ${@D}
+src:
+	ln -fs . $@
+
+${dir}/build.ninja: src
+	cd $< && gn gen ${@D}
 
 ${dir}/args.gn: ${dir}/build.ninja
 	echo 'enable_castanets=true' | tee $@
